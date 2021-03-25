@@ -33,6 +33,8 @@ public class Review1 {
 				oddSum += i;
 			}
 		}int total = evenSum + oddSum;
-		System.out.println("홀수와 짝수의 총합 : " + total);
+		System.out.println("홀수의 총합 : " + oddSum);
+		System.out.println("짝수의 총합 : " + evenSum);
+		System.out.println("홀수와 짝수의 총합 : " + (oddSum + evenSum));
 	}	
 }
