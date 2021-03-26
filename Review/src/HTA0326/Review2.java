@@ -11,26 +11,28 @@ public class Review2 {
 		int max = 0;
 		// 최소값은 변수 min에 저장된 값보다 배열에서 조회한 값이 더 작을 때만 min의 값을 배열의 값으로 바꾼다.
 		System.out.println("### 최소값, 최대값 출력하기 ###");
-		for(int score : scores) {
-			if(score < min) {
-				min = score;
-			}
+		for(int score : scores) {						// scores배열에 들어있는 값을 score 에 입력한다.
+			if(score < min) {							// score에 들어있는 0번쨰 배열의 값이 위 설정한 min 보다 낮을경우,
+				min = score;							// min에 score의 값을 저장한다.
+			}											// 배열에 들어있는 수만큼 반복된다.
 		}System.out.println("최소값 : " + min);
 		// 최대값은 변수 max에 저장된 값보다 배열에서 조회한 값이 더 클 때만 max의 값을 배열의 값으로 바꾼다.
-		for(int score : scores) {
-			if(score > max) {
-				max = score;
-			}
+		
+		for(int score : scores) {						// scores배열에 들어있는 값을 score 에 입력한다.
+			if(score > max) {							// score에 들어있는 0번쨰 배열의 값이 위 설정한 max 보다 높을경우,
+				max = score;							// max에 score 의 값을 저장한다.
+			}											// 배열에 들어있는 수만큼 반복된다.
 		}System.out.println("최대값 : " + max);
 		
 		// 최소값은 변수 min에 저장된 값보다 배열에서 조회한 값이 더 작을 때만 min의 값을 배열의 값으로 바꾼다.
 		// 최소값은 변수 min에 저장된 값보다 배열에서 조회한 값이 더 작을 때만 min의 값을 배열의 값으로 바꾼다.
-		for(int score : scores) {
-			if(score < min) {
-				min = score;
-			}else if(score > max){
-				max = score;
-			}
+		
+		for(int score : scores) {						// scores배열에 들어있는 값을 score 에 입력한다.
+			if(score < min) {							// score에 들어있는 0번쨰 배열의 값이 위 설정한 min 보다 낮을경우,
+				min = score;							// min에 score의 값을 저장한다.
+			}else if(score > max){						// score에 들어있는 0번쨰 배열의 값이 위 설정한 max 보다 높을경우,
+				max = score;							// max에 score 의 값을 저장한다.
+			}											// 배열에 들어있는 수만큼 반복된다.
 		}
 		System.out.println("최소값 : " + min);
 		System.out.println("최대값 : " + max);
