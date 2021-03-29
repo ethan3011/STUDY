@@ -14,11 +14,11 @@ public class Review2 {
 		Scanner sc = new Scanner(System.in);
 		String value = sc.nextLine();
 		//입력한 이름이 배열에 존재하는지 확인해보기
-		boolean isExist = false;										// 참 거짓 확인을 위해 isExist 변수를 생성한다.
-		for(String names: name) {										// for 향상문으로 변수 names 에 name 배열을 불러와 한개씩 대입한다.
-			if(names.equals(value)) {									// 입력한 값이 names 배열 안에 있는경우,
-				isExist = true;											// isExist는 true가 된다.
-				break;													// 확인이 되었으니 break;를 넣어 종료시킨다.
+		boolean isExist = false;		// 참 거짓 확인을 위해 isExist 변수를 생성한다.
+		for(String names: name) {		// for 향상문으로 변수 names 에 name 배열을 불러와 한개씩 대입한다.
+			if(names.equals(value)) {	// 입력한 값이 names 배열 안에 있는경우,
+				isExist = true;		// isExist는 true가 된다.
+				break;			// 확인이 되었으니 break;를 넣어 종료시킨다.
 			}
 		}
 		sc.close();
