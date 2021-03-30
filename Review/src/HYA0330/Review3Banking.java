@@ -17,17 +17,11 @@ class Banking{
 			System.out.println("### 가입을 축하드립니다 !");
 			System.out.println("================================================");
 			Account account = new Account();
-		
-		    account.no = accNo;
+			
+			account.no = accNo;
 			account.name = accName;
 			account.balance = accBalance;
 			account.Password = accPWD;
-			
-			
-			newMember.no = account.no;
-			newMember.name = account.name;
-			newMember.balance = account.balance;
-			newMember.Password = account.Password;
 			accounts[count] = account;
 			count++;
 	}
@@ -64,7 +58,7 @@ class Banking{
 				System.out.println("이체가 성공적으로 완료되었습니다.");
 				tf.balance -= tfAmount;
 				otherPartyAccNumber += tfAmount;
-				System.out.println("이체금액 : " + tfAmount + " 원이 차감되어 현재 잔액은 : " + tf.balance + " 입니다.");
+				System.out.println(tf.name +"님의 이체금액 : " + tfAmount + " 원이 차감되어 현재 잔액은 : " + tf.balance + " 입니다.");
 				break;
 			}
 		}
