@@ -1,4 +1,4 @@
-package HYA0330;
+package HTA0330;
 
 /*Banking class 생성*/
 class Banking{

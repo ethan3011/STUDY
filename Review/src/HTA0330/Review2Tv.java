@@ -1,4 +1,4 @@
-package HYA0330;
+package HTA0330;
 	/*Tv class 생성*/
 	//channel = 10, power 멤버변수 생성
 	class Tv{

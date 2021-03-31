@@ -1,4 +1,4 @@
-package HYA0330;
+package HTA0330;
 
 /*class : Product 생성*/
 //상품정보를 표현하는 객체에 대한 설계도를 작성하시오
