@@ -25,3 +25,4 @@ public class BAEKJOON8393 {
 		sc.close();
 	}
 }
+

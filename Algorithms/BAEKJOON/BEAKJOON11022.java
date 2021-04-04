@@ -41,3 +41,4 @@ public class BEAKJOON11022 {
 		System.out.println(sb);
 	}
 }
+

@@ -31,3 +31,4 @@ public class BAEKJOON10950 {
 		System.out.println(sb);
 	}	
 }
+
