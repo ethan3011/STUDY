@@ -2,11 +2,11 @@ public class TEST {
  
 	public static void main(String[] args) {
 		
-		for (int i=1; i<=5; i++) {
-			for (int j=1; j<=i; j++) {
-				System.out.print("*");
-			}
-			System.out.println();
-		}
+		char a = '1';
+		
+		System.out.println(a);
+
+		System.out.println(Integer.valueOf('8'));
+
 	}
 }
