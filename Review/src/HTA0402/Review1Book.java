@@ -33,6 +33,20 @@ public class Review1Book {
 		this.discountRate = discounteRate;
 	}
 	
+	public Review1Book(int no, String title, String writer, String publisher, int price, boolean isSoldOut,
+			double discountRate, Review1Event event, Review1Gift gift) {
+		super();
+		this.no = no;
+		this.title = title;
+		this.writer = writer;
+		this.publisher = publisher;
+		this.price = price;
+		this.isSoldOut = isSoldOut;
+		this.discountRate = discountRate;
+		this.event = event;
+		this.gift = gift;
+	}
+
 	public Review1Book() {}
 	
 	//멤버변수에 대한 getter/setter 메소드 정의하기	
