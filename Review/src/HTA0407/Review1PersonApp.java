@@ -18,3 +18,4 @@ public class Review1PersonApp {
 		professor.displayInfo();
 	}
 }
+

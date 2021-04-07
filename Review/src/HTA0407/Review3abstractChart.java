@@ -19,3 +19,4 @@ public abstract class Review3abstractChart {
 	public abstract void draw(); 
 
 }
+

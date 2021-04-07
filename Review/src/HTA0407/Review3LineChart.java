@@ -9,3 +9,4 @@ public class Review3LineChart extends Review3abstractChart{
 		System.out.println("꺽은선 그래프를 그린다.");	
 	}
 }
+

@@ -47,3 +47,4 @@ public class Review1Student extends Review1Person{
 		System.out.println("학과 : " + dept);
 	}
 }
+

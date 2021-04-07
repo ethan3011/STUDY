@@ -48,3 +48,4 @@ public class Review2 {
 		System.out.println("3.1의 탄젠트값 : " + tan(3.1));
 	}
 }
+

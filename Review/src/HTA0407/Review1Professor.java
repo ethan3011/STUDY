@@ -36,3 +36,4 @@ public class Review1Professor extends Review1Person{
 		System.out.println("직위 : " + position);
 	}
 }
+

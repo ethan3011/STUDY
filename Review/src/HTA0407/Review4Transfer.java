@@ -19,3 +19,4 @@ public class Review4Transfer extends Review4AbstractBanking{
 		System.out.println("이체결과를 화면에 표시한다.");
 	}
 }
+

@@ -44,3 +44,4 @@ public class Review1Person {
 		System.out.println("연락처 : " + tel);
 	}
 }
+

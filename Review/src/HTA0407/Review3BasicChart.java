@@ -9,3 +9,4 @@ public class Review3BasicChart extends Review3abstractChart{
 		System.out.println("심플한 차트를 그린다.");
 	}
 }
+
