@@ -1,14 +1,9 @@
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
+package Algorithms;
 /*
  * 두 정수 A와 B를 입력받은 다음, A+B를 출력하는 프로그램을 작성하시오.
  * 
  * 입력은 여러 개의 테스트 케이스로 이루어져 있다.
  * 각 테스트 케이스는 한 줄로 이루어져 있으며, 각 줄에 A와 B가 주어진다. (0 < A, B < 10)
- * 입력의 마지막에는 0 두 개가 들어온다.
- * 
  * 각 테스트 케이스마다 A+B를 출력한다.
  * 
  * 예제				//				출력
@@ -17,28 +12,25 @@ import java.io.InputStreamReader;
  * 3 4				//				7
  * 9 8				//				17
  * 5 2				//				7
- * 0 0				//
  */
+
 import java.io.*;
 import java.util.StringTokenizer;
-public class BAEKJOON10952 {
+public class BAEKJOON10951 {
 	
 	public static void main(String[] args) throws IOException{
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringTokenizer st;
+		String str;
 		
-		while(true) {
-			
-			StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+		while((str = br.readLine()) != null) {
+			st = new StringTokenizer(str, " ");
 			int A = Integer.parseInt(st.nextToken());
 			int B = Integer.parseInt(st.nextToken());
-			
-			if(A ==0 && B == 0) {
-				break;
-			}
-			bw.write((A+B) + "\n");
-			bw.flush();	
+			bw.write((A+B)+"\n");
+			bw.flush();
 		}
 	}
 }
