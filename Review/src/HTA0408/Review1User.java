@@ -1,19 +1,19 @@
 package HTA0408;
 
 /*User class*/
-public class User {
+public class Review1User {
 		
 	//private id, name 생성
 	private String id;
 	private String name;
 
 	//기본생성자 매개변수 id, name
-	public User(String id, String name) {
+	public Review1User(String id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 	
-	public User() {}
+	public Review1User() {}
 
 	//getter, setter 생성
 	public String getId() {

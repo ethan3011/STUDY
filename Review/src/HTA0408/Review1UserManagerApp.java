@@ -1,17 +1,17 @@
 package HTA0408;
 
 /*UserManagerApp class*/
-public class UserManagerApp {
+public class Review1UserManagerApp {
 	
 	//main
 	public static void main(String[] args) {
 
 		//UserRepository의 구현객체 생성하기
-		UserRepository repoArr = new UserArrayRepository();
-		UserRepository repoArr2 = new UserArrayRepository();
+		Review1UserRepository repoArr = new Review1UserArrayRepository();
+		Review1UserRepository repoArr2 = new Review1UserArrayRepository();
 				
 		//UserManager객체 생성
-		UserManager usermanager = new UserManager();
+		Review1UserManager usermanager = new Review1UserManager();
 		
 		// 방법1
 		//setter 메소드를 이용해서 UserRepository구현객체를 UserManager의 repo변수에 전달하기
@@ -19,7 +19,7 @@ public class UserManagerApp {
 		
 		//### 아이디로 사용자 조회하기
 		System.out.println("###아이디로 사용자 조회하기");
-		User user1 = usermanager.searchUser("kim");
+		Review1User user1 = usermanager.searchUser("kim");
 		if(user1 != null) {
 			System.out.println("조회하신 아이디는 ID : "+user1.getId() + "/ NAME : "+user1.getName()+ " 입니다.");
 		}else {
@@ -36,19 +36,19 @@ public class UserManagerApp {
 	
 		//### 다른 사용자 그대로 있는지 확인하기
 		System.out.println("### 다른 사용자 그대로 있는지 확인하기");
-		User user2 = usermanager.searchUser("kim");
+		Review1User user2 = usermanager.searchUser("kim");
 		if(user2 != null) {
 			System.out.println("조회하신 아이디는 ID : "+user2.getId() + " / NAME : "+user2.getName()+ " 입니다.");
 		}else {
 			System.out.println("[오류] 입력하신 ID는 존재하지 않습니다.");
 		}
-		User user3 = usermanager.searchUser("hwang");
+		Review1User user3 = usermanager.searchUser("hwang");
 		if(user3 != null) {
 			System.out.println("조회하신 아이디는 ID : "+user3.getId() + " / NAME : "+user3.getName()+ " 입니다.");
 		}else {
 			System.out.println("[오류] 입력하신 ID는 존재하지 않습니다.");
 		}
-		User user4 = usermanager.searchUser("nam");
+		Review1User user4 = usermanager.searchUser("nam");
 		if(user4 != null) {
 			System.out.println("조회하신 아이디는 ID : "+user4.getId() + " / NAME : "+user4.getName()+ " 입니다.");
 		}else {
@@ -56,11 +56,11 @@ public class UserManagerApp {
 		}
 		
 		// 방법2
-		UserManager usermanager2 = new UserManager(repoArr2);
+		Review1UserManager usermanager2 = new Review1UserManager(repoArr2);
 		
 		//### 아이디로 사용자 조회하기
 		System.out.println("### 아이디로 사용자 조회하기");
-		User user9 = usermanager2.searchUser("kim");
+		Review1User user9 = usermanager2.searchUser("kim");
 		if(user9 != null) {
 			System.out.println("조회하신 아이디는 ID : " + user9.getId() + " / NAME : " + user9.getName() + " 입니다.");
 		}else {
@@ -78,7 +78,7 @@ public class UserManagerApp {
 		
 		//### 다른 사용자 그대로 있는지 확인하기
 		System.out.println("### 다른 사용자 그대로 있는지 확인하기");
-		User user8 = usermanager2.searchUser("gam");
+		Review1User user8 = usermanager2.searchUser("gam");
 		if(user8 != null) {
 			System.out.println("[성공]"+"\n"+"ID : " + user8.getId() + "\n" + "NAME : " + user8.getName());
 		}else {
@@ -86,7 +86,7 @@ public class UserManagerApp {
 			System.out.println();
 		}
 		
-		User user7 = usermanager2.searchUser("kim");
+		Review1User user7 = usermanager2.searchUser("kim");
 		if(user7 != null) {
 			System.out.println("[성공]"+"\n"+"ID : " + user7.getId() + "\n" + "NAME : " + user7.getName());
 			System.out.println();
@@ -94,7 +94,7 @@ public class UserManagerApp {
 			System.out.println("[오류] 입력하신 아이디는 존재하지 않습니다.");
 		}
 		
-		User user6 = usermanager2.searchUser("nam");
+		Review1User user6 = usermanager2.searchUser("nam");
 		if(user6 != null) {
 			System.out.println("[성공]"+"\n"+"ID : " + user6.getId() + "\n" + "NAME : " + user6.getName());
 			System.out.println();
