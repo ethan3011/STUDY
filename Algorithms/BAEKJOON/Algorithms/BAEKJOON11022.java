@@ -19,7 +19,7 @@ package Algorithms;
  */
 import java.io.*;
 import java.util.StringTokenizer;
-public class BEAKJOON11022 {
+public class BAEKJOON11022 {
 
 	public static void main(String[] args) throws IOException{
 		
