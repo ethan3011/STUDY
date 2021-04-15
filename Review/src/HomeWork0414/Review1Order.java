@@ -3,7 +3,7 @@ package HomeWork0414;
 public class Review1Order {
 
 	private Review1Product item;		// 주문상품
-	private int amount;					// 주문수량
+	private int amount;			// 주문수량
 	
 	public Review1Order() {}
 
@@ -13,6 +13,14 @@ public class Review1Order {
 		this.amount = amount;
 	}
 
+	public int getOrderPrice() {
+		return item.getPrice()*amount;
+	}
+	
+	public int getSavePoint() {
+		return item.getPoint()*amount;
+	}
+	
 	public Review1Product getItem() {
 		return item;
 	}
