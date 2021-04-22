@@ -1,6 +1,7 @@
 package HTA0421;
 
-public class Student {
+public class Student implements Comparable<Student>{
+
 	private String name;
 	private int kor;
 	private int eng;
@@ -9,7 +10,6 @@ public class Student {
 	private int average;
 	
 	public Student() {}
-	
 	public Student(String name, int kor, int eng, int math) {
 		this.name = name;
 		this.kor = kor;
@@ -18,28 +18,26 @@ public class Student {
 		this.total = kor+eng+math;
 		this.average = this.total/3;
 	}
-
 	public String getName() {
 		return name;
 	}
-
 	public int getKor() {
 		return kor;
 	}
-
 	public int getEng() {
 		return eng;
 	}
-
 	public int getMath() {
 		return math;
 	}
-
 	public int getTotal() {
 		return total;
 	}
-
 	public int getAverage() {
 		return average;
+	}
+	@Override
+	public int compareTo(Student other) {
+		return this.total - other.total;
 	}
 }
