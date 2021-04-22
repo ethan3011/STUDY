@@ -69,5 +69,5 @@ public class StudentService {
 	public void saveAllStudentData() {
 		repository.saveData();
 	}
-	
 }
+ 

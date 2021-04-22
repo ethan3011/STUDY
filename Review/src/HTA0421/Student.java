@@ -41,3 +41,4 @@ public class Student implements Comparable<Student>{
 		return this.total - other.total;
 	}
 }
+ 
