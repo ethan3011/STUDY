@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import HTA0423.exception.UserException;
 import HTA0423.vo.User;
 
 public class UserRepository {
@@ -29,6 +28,10 @@ public class UserRepository {
 	public void insertUser(User user) {
 			db.add(user);
 	}
+	
+	public List<User> AllUsers() {
+		return db;
+	} 
 	
 	/**
 	 * 지정된 사용자아이디로 사용자정보를 조회한다.
@@ -52,25 +55,27 @@ public class UserRepository {
 	public void updateUser(User user) {
 		User foundUser = getUserById(user.getId());
 		if(foundUser == null) {
-			throw new UserException("입력하신 사용자가 존재하지 않습니다.");
-		}
-		
-		foundUser.setId(user.getId());
-		foundUser.setName(user.getName());
-		foundUser.setPassword(user.getPassword());
-		foundUser.setPoint(user.getPoint());
-		
-		if(foundUser.getPoint() > 5000000) {
-			foundUser.setGrade("플레티넘");
-		}else if(foundUser.getPoint() > 1000000) {
-			foundUser.setGrade("골드");
-		}else if(foundUser.getPoint() > 100000) {
-			foundUser.setGrade("로얄");
+			// 관리자 계정에서 메인으로 튕기지 않도록 throw를 사용하지 않는다.
+			System.out.println("입력하신 사용자가 존재하지 않습니다.");
 		}else {
-			foundUser.setGrade("일반");
+			foundUser.setId(user.getId());
+			foundUser.setName(user.getName());
+			foundUser.setPassword(user.getPassword());
+			foundUser.setPoint(user.getPoint());
+			
+			if(foundUser.getPoint() > 5000000) {
+				foundUser.setGrade("플레티넘");
+			}else if(foundUser.getPoint() > 1000000) {
+				foundUser.setGrade("골드");
+			}else if(foundUser.getPoint() > 100000) {
+				foundUser.setGrade("로얄");
+			}else {
+				foundUser.setGrade("일반");
+			}
+			
+			System.out.println("사용자의 정보변경이 완료되었습니다.");
 		}
 		
-		System.out.println("사용자의 정보변경이 완료되었습니다.");
 	}
 	
 	/**

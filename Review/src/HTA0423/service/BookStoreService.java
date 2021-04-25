@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import HTA0423.exception.BookException;
 import HTA0423.exception.OrderException;
 import HTA0423.exception.UserException;
 import HTA0423.repository.BookRepository;
@@ -24,6 +23,7 @@ public class BookStoreService {
 	
 	// 로그인 인증을 마친 사용자정보가 저장된다.
 	private User loginedUser = null;
+	private User adminloginedUser = null;
 	
 	/**
 	 * 모든 책정보를 조회하는 기능.
@@ -110,7 +110,8 @@ public class BookStoreService {
 	public void updateBookStock(int no, int stock) {
 		Book foundBook = bookRepository.getBookByNo(no);
 		if(foundBook == null) {
-			throw new BookException("해당 번호의 책이 존재하지 않습니다.");
+			// 관리자 계정에서 메인으로 튕기지 않도록 throw를 사용하지 않는다.
+			System.out.println("해당 번호의 책이 존재하지 않습니다.");
 		}else {
 			foundBook.setStock(stock);
 			System.out.println("[성공] " + no + " 번의 책 재고가 "+stock +"개로 변경되었습니다.");
@@ -154,8 +155,11 @@ public class BookStoreService {
 	 */
 	public void login(String id, String password) {
 		User foundUser = userRepository.getUserById(id);
-			if((foundUser == null) || (!(foundUser.getId().equals(id) && foundUser.getPassword().equals(password)))) {
+			if((foundUser == null)) {
 				throw new UserException("아이디가 존재하지 않거나 아이디 혹은 비밀번호가 일치하지 않습니다.");
+			}
+			if(!(foundUser.getId().equals(id) && foundUser.getPassword().equals(password))) {
+				throw new UserException("아이디가 존재하지 않거나 아이디 혹은 비밀번호가 일치하지 않습니다.");				
 			}
 			loginedUser = foundUser;
 			System.out.println("[성공]" +foundUser.getName() +" 님 환영합니다.");
@@ -166,18 +170,25 @@ public class BookStoreService {
 	 * @param password
 	 */
 	public void adminLogin(String id, String password) {
+		
 		User foundUser = userRepository.getUserById(id);
-			if(foundUser == null || (!(foundUser.getId().equals("Admin123") && foundUser.getPassword().equals("Admin123")))) {
-				throw new UserException("아이디가 존재하지 않거나 아이디 혹은 비밀번호가 일치하지 않습니다.");
-			}
-			loginedUser = foundUser;
-			System.out.println("[성공]" +foundUser.getName() +" 님 환영합니다.");
-	}
+		if((foundUser == null)) {
+			throw new UserException("아이디가 존재하지 않거나 아이디 혹은 비밀번호가 일치하지 않습니다.");
+		}
+		if(!(id.equals("Admin123") && password.equals("Admin123"))) {
+			throw new UserException("아이디가 존재하지 않거나 아이디 혹은 비밀번호가 일치하지 않습니다.");				
+		}
+		adminloginedUser = foundUser;
+		System.out.println("[성공]" +foundUser.getName() +" 님 환영합니다.");
+}
 	
 	/**
 	 * 로그인된 사용자 정보를 초기화하는 기능.
 	 */
 	public void logout() {
+		loginedUser = null;
+	}
+	public void loginedUser() {
 		loginedUser = null;
 	}
 	
@@ -187,6 +198,13 @@ public class BookStoreService {
 	 */
 	public boolean isLogined() {
 		if(loginedUser != null) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isAdminLogined() {
+		if(adminloginedUser != null) {
 			return true;
 		}
 		return false;

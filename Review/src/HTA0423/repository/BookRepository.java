@@ -5,15 +5,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import HTA0423.exception.BookException;
 import HTA0423.vo.Book;
+
 
 public class BookRepository {
 
 	private List<Book> db = new ArrayList<>();
+	private DecimalFormat df = new DecimalFormat("#,###");
 	
 	public BookRepository() {
 		loadData();
@@ -50,7 +52,8 @@ public class BookRepository {
 		
 		Book foundBook = getBookByNo(book.getNo());
 		if(foundBook == null) {
-			throw new BookException("입력하신 번호의 책이 존재하지 않습니다.");
+			// 관리자 계정에서 메인으로 튕기지 않도록 throw를 사용하지 않는다.
+			System.out.println("해당 번호의 책이 존재하지 않습니다.");
 		}else {
 			foundBook.setCategory(book.getCategory());
 			foundBook.setTitle(book.getTitle());
@@ -58,7 +61,13 @@ public class BookRepository {
 			foundBook.setPublisher(book.getPublisher());
 			foundBook.setPrice(book.getPrice());
 			foundBook.setDiscountPrice(book.getDiscountPrice());
-			foundBook.setStock(book.getStock());			
+			foundBook.setStock(book.getStock());	
+			System.out.println("변경이 완료되었습니다.");
+			System.out.println("책번호" + "\t" + "가격" + "\t" + "할인가격" + "\t" + "재고" + "\t" + "제목");
+			System.out.println("====================================================================");
+			System.out.println(foundBook.getNo() + "\t" + df.format(foundBook.getPrice()) + "\t" + df.format(foundBook.getDiscountPrice())
+					+ "\t" + foundBook.getStock() + "\t" + foundBook.getTitle());
+			System.out.println("====================================================================");
 		}
 	}
 	
