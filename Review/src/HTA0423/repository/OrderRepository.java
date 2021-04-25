@@ -38,6 +38,7 @@ public class OrderRepository {
 				BufferedReader br = new BufferedReader(fr);){
 			
 			String text = null;
+			
 			while((text = br.readLine()) != null){
 				
 				String[] values = text.split(",");

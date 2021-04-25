@@ -1,6 +1,6 @@
 package HTA0423.vo;
 
-public class Book {
+public class Book implements Comparable<Book>{
 
 	private int no;				// 책번호
 	private String category;	// 카테고리
@@ -90,4 +90,8 @@ public class Book {
 		this.stock = stock;
 	}
 
+	@Override
+	public int compareTo(Book other) {
+		return this.no - other.no;
+	}
 }

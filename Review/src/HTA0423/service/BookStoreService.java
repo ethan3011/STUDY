@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import HTA0423.exception.BookException;
 import HTA0423.exception.OrderException;
 import HTA0423.exception.UserException;
 import HTA0423.repository.BookRepository;
@@ -29,8 +30,8 @@ public class BookStoreService {
 	 * @return 도서 목록
 	 */
 	public List<Book> getAllBookList() {
-		List<Book> book = bookRepository.getAllBooks();
-		return book;
+		List<Book> books = bookRepository.getAllBooks();
+		return books;
 	}
 	
 	/**
@@ -40,7 +41,7 @@ public class BookStoreService {
 	 */
 	public List<Book> searchBooksByCategory(String category) {
 		ArrayList<Book> foundBooks = new ArrayList<Book>();
-		List<Book> copyBooks = bookRepository.getAllBooks();
+		List<Book> copyBooks = getAllBookList();
 		
 		for(Book book:copyBooks) {
 			if(book.getCategory().equals(category)) {
@@ -59,7 +60,7 @@ public class BookStoreService {
 	 */
 	public List<Book> searchBooksByTitle(String title) {
 		ArrayList<Book> foundBooks = new ArrayList<Book>();
-		List<Book> copyBooks = bookRepository.getAllBooks();
+		List<Book> copyBooks = getAllBookList();
 		
 		for(Book book :copyBooks) {
 			if(book.getTitle().contains(title)) {
@@ -79,7 +80,7 @@ public class BookStoreService {
 	 */
 	public List<Book> searchBooksByPrice(int minPrice, int maxPrice) {
 		ArrayList<Book> foundBooks = new ArrayList<Book>();
-		List<Book> copyBooks = bookRepository.getAllBooks();
+		List<Book> copyBooks = getAllBookList();
 		
 		for(Book book:copyBooks) {
 			if(minPrice <= book.getPrice() && book.getPrice() <= maxPrice) {
@@ -97,7 +98,8 @@ public class BookStoreService {
 	 * @return 도서
 	 */
 	public Book findBook(int no) {
-		return null;
+		Book book = bookRepository.getBookByNo(no);
+			return book;
 	}
 	
 	/**
@@ -106,7 +108,21 @@ public class BookStoreService {
 	 * @param stock 변경된 재고량
 	 */
 	public void updateBookStock(int no, int stock) {
-		
+		Book foundBook = bookRepository.getBookByNo(no);
+		if(foundBook == null) {
+			throw new BookException("해당 번호의 책이 존재하지 않습니다.");
+		}else {
+			foundBook.setStock(stock);
+			System.out.println("[성공] " + no + " 번의 책 재고가 "+stock +"개로 변경되었습니다.");
+		}
+	}
+	
+	/**
+	 * 지정된 책정보를 변경하는 기능
+	 * @param book 변경할 책정보
+	 */
+	public void updateBook(Book book) {
+		bookRepository.updateBook(book);
 	}
 	
 	/**
@@ -119,9 +135,16 @@ public class BookStoreService {
 			throw new UserException("이미 등록된 아이디 입니다");
 		}else {
 			userRepository.insertUser(user);
-			System.out.println("신규회원 가입을 축하드립니다.");
-			
+			System.out.println("[성공] 신규회원 가입을 축하드립니다.");
 		}
+	}
+	
+	/**
+	 * 지정된 사용자 정보를 새로운 사용자정보로 갱신하는 기능
+	 * @param user 새로운 사용자
+	 */
+	public void updateUser(User user) {
+		userRepository.updateUser(user);
 	}
 	
 	/**
@@ -131,17 +154,24 @@ public class BookStoreService {
 	 */
 	public void login(String id, String password) {
 		User foundUser = userRepository.getUserById(id);
-			if(foundUser == null) {
-				throw new UserException("아이디 혹은 비밀번호가 일치하지 않습니다");
+			if((foundUser == null) || (!(foundUser.getId().equals(id) && foundUser.getPassword().equals(password)))) {
+				throw new UserException("아이디가 존재하지 않거나 아이디 혹은 비밀번호가 일치하지 않습니다.");
 			}
-			if(!(foundUser.getId().equals(id) && foundUser.getPassword().equals(password))) {
-				throw new UserException("아이디 혹은 비밀번호가 일치하지 않습니다.");
-			}
-			
 			loginedUser = foundUser;
-			System.out.println(foundUser.getName() +" 님의 로그인이 완료되었습니다.");
-			
-			
+			System.out.println("[성공]" +foundUser.getName() +" 님 환영합니다.");
+	}
+	/**
+	 * 
+	 * @param id
+	 * @param password
+	 */
+	public void adminLogin(String id, String password) {
+		User foundUser = userRepository.getUserById(id);
+			if(foundUser == null || (!(foundUser.getId().equals("Admin123") && foundUser.getPassword().equals("Admin123")))) {
+				throw new UserException("아이디가 존재하지 않거나 아이디 혹은 비밀번호가 일치하지 않습니다.");
+			}
+			loginedUser = foundUser;
+			System.out.println("[성공]" +foundUser.getName() +" 님 환영합니다.");
 	}
 	
 	/**
@@ -198,7 +228,7 @@ public class BookStoreService {
 		}else {
 			loginedUser.setGrade("일반");
 		}
-		System.out.println("주문이 완료되었습니다.");
+		System.out.println("[성공]주문이 완료되었습니다.");
 	}
 	
 	/**
@@ -215,6 +245,7 @@ public class BookStoreService {
 		
 		Iterator<Order> iter = orders.iterator();
 		Book bookInfo = new Book();
+		
 		
 		while(iter.hasNext()) {
 			Order order = iter.next();
@@ -252,4 +283,3 @@ public class BookStoreService {
 		orderRepository.saveData();
 	}
 }
-

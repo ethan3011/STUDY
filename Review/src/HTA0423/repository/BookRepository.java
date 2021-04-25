@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import HTA0423.exception.BookException;
 import HTA0423.vo.Book;
 
 public class BookRepository {
@@ -47,14 +48,28 @@ public class BookRepository {
 	 */
 	public void updateBook(Book book) {
 		
+		Book foundBook = getBookByNo(book.getNo());
+		if(foundBook == null) {
+			throw new BookException("입력하신 번호의 책이 존재하지 않습니다.");
+		}else {
+			foundBook.setCategory(book.getCategory());
+			foundBook.setTitle(book.getTitle());
+			foundBook.setWriter(book.getWriter());
+			foundBook.setPublisher(book.getPublisher());
+			foundBook.setPrice(book.getPrice());
+			foundBook.setDiscountPrice(book.getDiscountPrice());
+			foundBook.setStock(book.getStock());			
+		}
 	}
 	
+	/**
+	 * 책의정보를 로드한다.
+	 */
 	private void loadData() {
 		try(FileReader fr = new FileReader("src/HTA0423/books.csv");
 				BufferedReader br = new BufferedReader(fr);) {
 			
 			String text = null;
-			
 			while((text = br.readLine()) != null) {
 				// text에 br라인을 또 만들게 되면 두번째 값부터 저장이 되므로 주의 !
 				String[] values = text.split(",");
@@ -76,6 +91,9 @@ public class BookRepository {
 		}
 	}
 	
+	/**
+	 * 책의 정보를 저장한다.
+	 */
 	public void saveData() {
 		try (PrintWriter pw = new PrintWriter("src/HTA0423/books.csv")){
 			for(Book book:db) {

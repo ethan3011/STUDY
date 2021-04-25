@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import HTA0423.exception.UserException;
 import HTA0423.vo.User;
 
 public class UserRepository {
@@ -49,7 +50,27 @@ public class UserRepository {
 	 * @param user 변경된 사용자 정보가 포함되어 있는 User객체
 	 */
 	public void updateUser(User user) {
+		User foundUser = getUserById(user.getId());
+		if(foundUser == null) {
+			throw new UserException("입력하신 사용자가 존재하지 않습니다.");
+		}
 		
+		foundUser.setId(user.getId());
+		foundUser.setName(user.getName());
+		foundUser.setPassword(user.getPassword());
+		foundUser.setPoint(user.getPoint());
+		
+		if(foundUser.getPoint() > 5000000) {
+			foundUser.setGrade("플레티넘");
+		}else if(foundUser.getPoint() > 1000000) {
+			foundUser.setGrade("골드");
+		}else if(foundUser.getPoint() > 100000) {
+			foundUser.setGrade("로얄");
+		}else {
+			foundUser.setGrade("일반");
+		}
+		
+		System.out.println("사용자의 정보변경이 완료되었습니다.");
 	}
 	
 	/**
@@ -58,8 +79,8 @@ public class UserRepository {
 	private void loadData() {
 		try (FileReader fr = new FileReader("src/HTA0423/users.csv");
 				BufferedReader br = new BufferedReader(fr);){
-			String text = null;
 			
+			String text = null;
 			while((text = br.readLine()) != null) {
 				
 				String[] values = text.split(",");

@@ -1,6 +1,6 @@
 package HTA0423.vo;
 
-public class Order {
+public class Order implements Comparable<Order>{
 
 	private String userId;		// 주문한 사용자 아이디
 	private int bookNo;			// 주문한 책번호
@@ -30,5 +30,8 @@ public class Order {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
-	
+	@Override
+	public int compareTo(Order other) {
+		return this.bookNo - other.bookNo;
+	}
 }
