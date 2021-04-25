@@ -7,3 +7,4 @@ public class BookStoreException extends RuntimeException {
 		super(message);
 	}
 }
+

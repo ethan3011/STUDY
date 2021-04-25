@@ -7,3 +7,4 @@ public class BookException extends BookStoreException {
 		super(message);
 	}
 }
+

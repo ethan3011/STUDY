@@ -7,3 +7,4 @@ public class UserException extends BookStoreException {
 		super(message);
 	}
 }
+

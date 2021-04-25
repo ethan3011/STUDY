@@ -7,3 +7,4 @@ public class OrderException extends BookStoreException {
 		super(message);
 	}
 }
+
