@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import VoucherWeb.Exception.VoucherException;
@@ -12,24 +13,32 @@ import VoucherWeb.vo.Voucher;
 
 
 	public class VoucherRepository {
+		
+		/**
+		 * 바우처 기본배열 생성
+		 */
 		List<Voucher> db = new ArrayList<Voucher>();
 		
+		
+		/**
+		 * 기본생성자에 파일에서 바우처정보를 가져오게 한다.
+		 */
 		public VoucherRepository(){
 			loadData();
 		}
 		
 		/**
 		 * 모든 바우처 정보를 획득한다.
-		 * @return 바우처들
+		 * @return 바우처
 		 */
 		public List<Voucher> getAllVoucher() {
 			return db;
 		}
 		
 		/**
-		 * 바우처중 번호가 같은것을 조회한다.
+		 * 바우처중에 번호가 같은 바우처정보를 가져온다.
 		 * @param name 바우처번호
-		 * @return 같은 값이 있으면 바우처, 없으면 null
+		 * @return 조회된 객체, 없으면 null을 반환
 		 */
 		public Voucher getVoucherByNo(int no) {
 			for(Voucher voucher :db) {
@@ -41,7 +50,7 @@ import VoucherWeb.vo.Voucher;
 		}
 		
 		/**
-		 * 신규 바우처 객체를 받아서 추가한다.
+		 * [관리자모드]신규 바우처 객체를 받아서 추가한다.
 		 * @param voucher 신규바우처
 		 */
 		public void AddNewVoucher(Voucher voucher) {
@@ -54,9 +63,26 @@ import VoucherWeb.vo.Voucher;
 				db.add(foundVoucher);
 			}
 		}
+		/**
+		 * [관리자모드] 바우처를 삭제한다.
+		 * @param voucherNo 삭제할 바우처번호
+		 * @param name 삭제할 이름
+		 */
+		public void deleteVoucher(int voucherNo, String name) {
+			Iterator<Voucher> value = db.iterator();
+			while(value.hasNext()) {
+				Voucher nextValue = value.next();
+				if(nextValue.getVoucherNo() == voucherNo && nextValue.getName().equals(name)) {
+					value.remove();
+				}
+			}
+		}
 		
-		
-		public Voucher changeVoucherInfo(Voucher voucher) {
+		/**
+		 * [관리자모드]바우처 정보를 변경한다.
+		 * @param voucher 변경할바우처
+		 */
+		public void changeVoucherInfo(Voucher voucher) {
 			Voucher foundVoucher = getVoucherByNo(voucher.getVoucherNo());
 			if(foundVoucher != null) {
 				foundVoucher.setVoucherNo(voucher.getVoucherNo());
@@ -70,13 +96,16 @@ import VoucherWeb.vo.Voucher;
 			throw new VoucherException("해당 책 정보가 존재하지 않습니다.");
 		}
 		
-
+	/**
+	 * 데이터를 불러온다.
+	 */
 	private void loadData() {
-		try(FileReader fr = new FileReader("Java/VoucherWeb/VoucherWeb.csv");
+		try(FileReader fr = new FileReader("Java/VoucherWeb/Voucher.csv");
 			BufferedReader br = new BufferedReader(fr)){
-			String text = null;
 			
+			String text = null;
 			while((text = br.readLine()) != null){
+				
 				String[] value = text.split(",");
 				
 				int voucherNo = Integer.parseInt(value[0]);
@@ -94,12 +123,17 @@ import VoucherWeb.vo.Voucher;
 		}
 	}
 	
+	/**
+	 * 데이터를 저장한다.
+	 */
 	public void saveData() {
-		try(PrintWriter pw = new PrintWriter("Java/VoucherWeb/VoucherWeb.csv");){
+		try(PrintWriter pw = new PrintWriter("Java/VoucherWeb/Voucher.csv");){
 			
 			for(Voucher voucher : db) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(voucher.getName())
+				sb.append(voucher.getVoucherNo())
+				.append(",")
+				.append(voucher.getName())
 				.append(",")
 				.append(voucher.getPublisher())
 				.append(",")
@@ -116,5 +150,4 @@ import VoucherWeb.vo.Voucher;
 			e.printStackTrace();
 		}
 	}
-	
 }

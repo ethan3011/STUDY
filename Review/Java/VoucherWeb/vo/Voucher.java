@@ -11,17 +11,18 @@ public class Voucher {
 	public Voucher(){}
 	
 	public Voucher(int voucherNo, String name, String publisher, int price, int discountPrice, int stock) {
+		this.voucherNo = voucherNo;
 		this.name = name;
 		this.publisher = publisher;
 		this.price = price;
 		this.discountPrice = discountPrice;
 		this.stock = stock;
 	}
-	
+
 	public int getVoucherNo() {
 		return voucherNo;
 	}
-	
+
 	public void setVoucherNo(int voucherNo) {
 		this.voucherNo = voucherNo;
 	}
