@@ -1,0 +1,34 @@
+-- 모든 사원들의 아이디,이름,급여,급여등급을 조회하기
+-- 아이디, 이름, 급여 - employees
+-- 급여등급 = salary_grade
+-- 사원의 급여가 급여등급정보의 최소급여 이상이고, 최대급여 이하인 행과 조인
+select E.employee_id, E.first_name, E.salary, G.grade
+from employees E, salary_grade G
+where E.salary >= G.min_salary
+and E.salary <= G.max_salary;
+
+-- 60번 부서에 소속된 사원들의 사원아이디, 사원이름, 상사의 아이디, 상사의 이름 조회하기
+-- 사원아이디, 사원이름 - employees
+-- 상사의 아이디, 상사의 이름 - employees
+select E.employee_id EMP_id, E.first_name EMP_NAME,
+       MG.employee_id MG_ID, MG.first_name MG_NAME
+from employees E, employees MG
+where E.manager_id =  MG.employee_id
+order by E.employee_id asc;
+
+-- 60번 부서에 소속된 사원들의 사원아이디, 사원이름, 사원의 소속부서명,
+--                          상사의 아이디, 상사의 이름, 상사의 소속부서명 조회하기
+-- 사원아이디, 사원이름 - employees
+-- 상사의 아이디, 상사의 이름 - employees
+-- 사원의 소속부서명 - departments
+-- 상사의 소속부서명 - departments
+
+select E.employee_id EMP_ID, E.first_name EMP_NAME,
+       ED.department_id EMP_DPT_ID, ED.department_name EMP_DPT_NAME,
+       MG.employee_id MG_ID, MG.first_name MG_NAME,
+       MGD.department_id MG_DPT_ID, MGD.department_name MG_DPT_NAME
+from employees E, employees MG, departments ED, departments MGD
+where E.department_id = 60
+and E.manager_id = MG.employee_id
+and E.department_id = ED.department_id
+and MG.department_id = MGD.department_id;
