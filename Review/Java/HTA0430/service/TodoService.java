@@ -135,7 +135,7 @@ public class TodoService {
 			throw new TodoException("로그인 후 사용가능한 서비스입니다.");
 		}
 		// 2. Todo객체의 상태를 등록상태로 설정한다.
-		todo.setStatus(Todo.TODO_STATUS_ADDED);
+		todo.setStatus("등록");
 		
 		// 3. Todo객체의 작성자에 현재 로그인된 사용자의 아이디를 설정한다.
 		todo.setWriter(loginedUser.getId());
@@ -163,11 +163,16 @@ public class TodoService {
 		
 		// 3. 로그인한 사용자가 작성자로 설정되어 있는 일정만 ArrayList에 담아서 반환한다.
 		ArrayList<Todo> foundTodo = new ArrayList<Todo>(); 
+		
 		for(Todo todo :getAllTodo) {
-			if(todo.getWriter().equals(loginedUser.getId())){
+			if((todo.getWriter().equals(loginedUser.getId())) && !(todo.getStatus().equals("삭제"))){
 				foundTodo.add(todo);
 			}
 		}
+		if(foundTodo.isEmpty()) {
+			throw new TodoException("일정이 존재하지 않습니다");
+		}
+		
 		return foundTodo;
 	}
 	
@@ -194,6 +199,10 @@ public class TodoService {
 		// 4. 일정정보 작성자와 로그인한 사용자가 일치하지 않으면 TodoException - 다른 사용자의 일정은 조회할 수 없습니다.
 		if(!(foundTodo.getWriter().equals(loginedUser.getId()))) {
 			throw new TodoException("다른 사용자의 일정은 조회할 수 없습니다.");
+		}
+		
+		if(foundTodo.getStatus().equals("삭제")) {
+			throw new TodoException("삭제된 일정은 조회하실수 없습니다.");
 		}
 		
 		// 5. 조회된 일정정보를 반환한다.
@@ -236,7 +245,6 @@ public class TodoService {
 	 * 일정 완료처리 하기
 	 * @param no 일정번호
 	 */
-	@SuppressWarnings("static-access")
 	public void 일정완료처리서비스(int no) {
 		
 		// 1. 로그인여부제공서비스()를 실행해서 로그인되어 있지 않으면 TodoException 발생 - 로그인 후 사용가능한 서비스입니다.
@@ -257,9 +265,16 @@ public class TodoService {
 			throw new TodoException("다른 사용자의 일정은 변경할 수 없습니다.");
 		}
 		
-		// 5. 조회된 일정정보의 상태를 완료상태로 변경한다.
-		foundTodo.setStatus(foundTodo.TODO_STATUS_COMPLETED);
+		if(foundTodo.getStatus().equals("삭제")) {
+			throw new TodoException("삭제된 일정은 변경할수 없습니다");
+		}
 		
+		if(foundTodo.getStatus().equals("완료")) {
+			throw new TodoException("이미 완료처리된 일정 입니다.");
+		}
+		
+		// 5. 조회된 일정정보의 상태를 완료상태로 변경한다.
+		foundTodo.setStatus("완료");
 		// 6. 조회된 일정정보의 완료일자를 현재날짜와 시간정보로 설정한다.
 		foundTodo.setCompletedDate(new Date());
 		System.out.println("해당 일정이 완료처리 되었습니다.");
@@ -269,7 +284,6 @@ public class TodoService {
 	 * 일정 삭제하기
 	 * @param no 일정번호
 	 */
-	@SuppressWarnings("static-access")
 	public void 일정삭제서비스(int no) {
 		
 		// 1. 로그인여부제공서비스()를 실행해서 로그인되어 있지 않으면 TodoException 발생 - 로그인 후 사용가능한 서비스입니다.
@@ -290,8 +304,12 @@ public class TodoService {
 			throw new TodoException("다른 사용자의 일정은 삭제할 수 없습니다.");
 		}
 		
+		if(foundTodo.getStatus().equals("삭제")) {
+			throw new TodoException("이미 삭제된 일정 입니다");
+		}
+		
 		// 5. 일정정보의 상태를 삭제로 변경하고, 삭제일을 현재 날짜와 시간으로 설정한다.
-		foundTodo.setStatus(foundTodo.TODO_STATUS_DELETED);
+		foundTodo.setStatus("삭제");
 		foundTodo.setDeletedDate(new Date());
 		
 		System.out.println("삭제가 완료되었습니다.");

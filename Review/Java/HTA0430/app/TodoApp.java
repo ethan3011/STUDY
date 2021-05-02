@@ -1,7 +1,6 @@
 package HTA0430.app;
 
 import HTA0430.service.TodoService;
-import HTA0430.utils.StringUtils;
 import HTA0430.vo.Todo;
 import HTA0430.vo.User;
 
@@ -18,7 +17,7 @@ import HTA0430.exception.TodoException;
 
 public class TodoApp {
 	
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss");
 
 	private TodoService service = new TodoService();
 	
@@ -128,30 +127,24 @@ public class TodoApp {
 	
 	// 나의모든일정조회서비스를 실행한다.
 	private void 일정조회() {
+		List<Todo> todos = service.나의모든일정조회서비스();
 		System.out.println("[나의 모든 일정]");
 		System.out.println("=========================================================================");
-		List<Todo> todos = service.나의모든일정조회서비스();
 		for(Todo todo :todos) {
-			System.out.println("계획번호 : " + todo.getNo());
-			System.out.println("계획제목 : " + todo.getTitle());
-			System.out.println("계획 생성자 : " + todo.getWriter());
-			System.out.println("실행일 : " + dateFormat.format(todo.getDay()));
-			System.out.println("계획상태 : " + todo.getStatus());
-			System.out.println("계획내용 : " + todo.getText());
-			System.out.println("생성일 : " + dateFormat.format(todo.getCreatedDate()));
-			if(todo.getCompletedDate() == null) {
-				System.out.println("완료일 : 미정");
-			}else {
-				System.out.println("완료일 : " + dateFormat.format((todo.getCompletedDate())));
+				System.out.println("번호 : " + todo.getNo());
+				System.out.println("제목 : " + todo.getTitle());
+				System.out.println("생성이 : " + todo.getWriter());
+				System.out.println("생성일 : " + dateFormat.format(todo.getCreatedDate()));
+				System.out.println("예정일 : " + dateFormat.format(todo.getDay()));
+				System.out.println("상태 : " + todo.getStatus());
+				System.out.println("내용 : " + todo.getText());
+				if(todo.getCompletedDate() == null) {
+					System.out.println("완료일 : 미정");
+				}else {
+					System.out.println("완료일 : " + dateFormat.format((todo.getCompletedDate())));
+				}
+				System.out.println();
 			}
-			if(todo.getDeletedDate() == null) {
-				System.out.println("삭제일 : 미정");
-				System.out.println("=========================================================================");
-			}else {
-				System.out.println("삭제일 : " + dateFormat.format((todo.getDeletedDate())));
-				System.out.println("=========================================================================");
-			}
-		}
 	}
 	
 	private void 일정상세조회() {
@@ -160,26 +153,27 @@ public class TodoApp {
 		System.out.println("조회하실 일정 번호를 입력해주세요 : ");
 		int no = readInt();
 		Todo foundTodo = service.일정상세조회서비스(no);
-		System.out.println("=========================================================================");
-		System.out.println("계획번호 : " + foundTodo.getNo());
-		System.out.println("계획제목 : " + foundTodo.getTitle());
-		System.out.println("계획 생성자 : " + foundTodo.getWriter());
-		System.out.println("실행일 : " + dateFormat.format(foundTodo.getDay()));
-		System.out.println("계획상태 : " + foundTodo.getStatus());
-		System.out.println("계획내용 : " + foundTodo.getText());
-		System.out.println("생성일 : " + dateFormat.format(foundTodo.getCreatedDate()));
-		if(foundTodo.getCompletedDate() == null) {
-			System.out.println("완료일 : 미정");
-		}else {
-			System.out.println("완료일 : " + dateFormat.format((foundTodo.getCompletedDate())));
-		}
-		if(foundTodo.getDeletedDate() == null) {
-			System.out.println("삭제일 : 미정");
 			System.out.println("=========================================================================");
-		}else {
-			System.out.println("삭제일 : " + dateFormat.format((foundTodo.getDeletedDate())));
-			System.out.println("=========================================================================");
-		}
+			System.out.println("계획번호 : " + foundTodo.getNo());
+			System.out.println("계획제목 : " + foundTodo.getTitle());
+			System.out.println("계획 생성자 : " + foundTodo.getWriter());
+			System.out.println("실행일 : " + dateFormat.format(foundTodo.getDay()));
+			System.out.println("계획상태 : " + foundTodo.getStatus());
+			System.out.println("계획내용 : " + foundTodo.getText());
+			System.out.println("생성일 : " + dateFormat.format(foundTodo.getCreatedDate()));
+			if(foundTodo.getCompletedDate() == null) {
+				System.out.println("완료일 : 미정");
+			}else {
+				System.out.println("완료일 : " + dateFormat.format((foundTodo.getCompletedDate())));
+			}
+			if(foundTodo.getDeletedDate() == null) {
+				System.out.println("삭제일 : 미정");
+				System.out.println("=========================================================================");
+			}else {
+				System.out.println("삭제일 : " + dateFormat.format((foundTodo.getDeletedDate())));
+				System.out.println("=========================================================================");
+			}
+		
 	}
 	
 	// 일정제목, 내용, 예정일을 입력받아서 새일정추가서비스를 실행한다.
