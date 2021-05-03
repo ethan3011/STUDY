@@ -1,0 +1,149 @@
+-- 2021 - 05 - 03 (포괄조인, DDL명령어, JDCB)
+
+-- 1. 포괄조인
+-- 부서아이디, 부서명, 부서관리자아이디, 부서관리자 이름 조회하기
+-- 부서아이디, 부서명, 부서관리자아이디 - departments
+-- 부서관리자 이름 - employees
+select D.department_id, D.department_name, D.manager_id, E.first_name
+from departments D, employees E
+where D.manager_id = E.employee_id
+order by D.department_id asc;
+
+-- 포괄 조인을 활용하면, employees테이블과 매칭되지 않는 departments의 부서정보도 조회할수 있다.
+select D.department_id DP_ID, D.department_name DP_NAME, D.manager_id MG_ID, E.first_name MG_name
+from departments D, employees E
+where D.manager_id = E.employee_id(+)
+order by D.department_id asc;
+
+-- 커미션을 받는 사원들의 사원아이디, 이름, 소속부서아이디, 소속부서명 조회하기
+select E.employee_id, E.first_name, D.department_id, D.department_name
+from employees E, departments D
+where E.commission_pct is not null
+and E.department_id = D.department_id(+);
+
+-- 90번 부서에서 소속된 사원들의 사원아이디, 이름, 해당 사원의 상사의 이름을 조회하기
+select E.employee_id E_ID, E.first_name E_NAME, M.first_name MG_NAME
+from employees E, employees M
+where E.department_id = 90
+and E.manager_id = M.employee_id(+);
+
+-- 90번 부서에 소속된 사원들의 아이디, 이름, 직종제목 조회하기(오라클조인)
+select E.employee_id E_ID, E.first_name E_NAME, J.job_title J_TITLE
+from employees E, jobs J
+where E.department_id = 90
+and E.job_id = J.job_id;
+
+-- 90번 부서에 소속된 사원들의 아이디, 이름, 직종제목 조회하기(ANSI-조인)
+select E.employee_id E_ID, E.first_name E_NAME, J.job_title J_TITLE
+from employees E join jobs J on E.job_id = J.job_id
+where E.department_id = 90;
+
+-- 90번 부서에 소속된 사원의 아이디, 이름, 직종아이디, 직종제목, 소속부서 아이디, 소속부서명 조회하기
+-- 사원의 아이디, 이름, 직종아이디, 소속부서아이디 - employees
+-- 직종아이디, 직종제목 - jobs
+-- 소속부서아이디, 소속부서명 - departments (오라클조인)
+select E.employee_id E_ID, E.first_name E_NAME,
+       J.job_id J_ID, J.job_title J_TITLE, 
+       D.department_id D_ID, D.department_name D_NAME
+from employees E, jobs J, departments D
+where E.department_id = 90
+and E.job_id = J.job_id
+and E.department_id = D.department_id;
+
+-- 90번 부서에 소속된 사원의 아이디, 이름, 직종아이디, 직종제목, 소속부서 아이디, 소속부서명 조회하기
+-- 사원의 아이디, 이름, 직종아이디, 소속부서아이디 - employees
+-- 직종아이디, 직종제목 - jobs
+-- 소속부서아이디, 소속부서명 - departments (ANSI-조인)
+select E.employee_id E_ID, E.first_name E_NAME,
+       J.job_id J_ID, J.job_title J_TITLE, 
+       D.department_id D_ID, D.department_name D_NAME
+from employees E join jobs J on E.job_id = J.job_id
+                 join departments D on E.department_id = D.department_id
+where E.department_id = 90;
+
+-- 90번 부서에 소속된 사원의 아이디, 이름, 급여, 급여등급을 조회하기 (오라클조인)
+select E.employee_id, E.first_name, E.salary, S.grade
+from employees E, salary_grade S
+where E.department_id = 90
+and E.salary >= S.min_salary
+and E.salary <= S.max_salary;
+
+-- 90번 부서에 소속된 사원의 아이디, 이름, 급여, 급여등급을 조회하기 (ANSI-조인)
+select E.employee_id, E.first_name, E.salary, S.grade
+from employees E join salary_grade S on E.salary >= S.min_salary and E.salary<= S.max_salary
+where E.department_id = 90;
+
+-- 부서아이디, 부서명, 부서담당자 아이디, 부서담당자 이름 조회하기
+-- 부서담당자가 결정되어 있지 않은 부서도 조회한다. (오라클조인)
+select D.department_id D_ID, D.department_name D_NAME , D.manager_id MG_ID , M.first_name MG_NAME
+from departments D, employees M
+where D.manager_id = M.employee_id(+)
+order by D.department_id asc;
+ 
+-- 부서아이디, 부서명, 부서담당자 아이디, 부서담당자 이름 조회하기
+-- 부서담당자가 결정되어 있지 않은 부서도 조회한다. (ANSI-조인)
+select D.department_id D_ID, D.department_name D_NAME , D.manager_id MG_ID , M.first_name MG_NAME
+from departments D left outer join employees M on D.manager_id = M.employee_id;
+
+-- 2.DDL명령어
+-- 행의 모든 컬럼의 값을 지정해서 추가하기
+insert into sample_books
+(book_no, book_title, book_writer, book_price, book_discount_price, book_stock, book_created_date)
+values
+(150,'김치의정석','정석',15000,12000,100,sysdate);
+
+-- 행의 특정 컬럼에만 값을 지정해서 추가하기
+insert into sample_books
+(book_no, book_title, book_writer, book_price)
+values
+(127, '라면의정석', '라면', 15000);
+
+-- 테이블에 저장된 모든 데이터 삭제
+delete from sample_books;
+
+-- 테이블에 저장된 데이터 중에서 특정 행을 삭제하기
+delete from sample_books
+where book_no = 127;
+
+-- 테이블에 저장된 데이터 변경하기
+update  sample_books
+set
+    Book_price = 15000,
+    book_discount_price = 8000;
+
+
+-- 테이블의 모든 행에 대해서 book_price 컬럼의 값을 10000으로 변경하기
+update sample_books
+set book_price = 10000;
+
+-- 테이블의 특정 행에 대해서 book_price 컬럼의 값을 32000으로 변경
+update sample_books
+set book_price = 32000
+where book_no = 127;
+
+-- sample-books 테이블에 새로운 책 정보 추가하기 (3개 이상, 책 번호는 겹치지 않도록 한다.)
+insert into sample_books
+(book_no, book_title, book_writer, book_price, book_discount_price, book_stock)
+values
+(111,'아들아, 돈 공부해야 한다','정선용',15800,14220,1000);
+
+insert into sample_books
+(book_no, book_title, book_writer, book_price, book_discount_price, book_stock)
+values
+(112,'슈퍼개미 김정환에게 배우는 나의 첫 투자 수업. 2: 투자편','김정환,김이안',17000,15300,500);
+
+insert into sample_books
+(book_no, book_title, book_writer, book_price, book_discount_price, book_stock)
+values
+(113,'돈의 시나리오 계획이 있는 돈은 흔들리지 않는다','김종봉,제갈현열',17000,15300,1000);
+
+-- 책번호가 112번인 책 삭제하기
+delete from sample_books
+where book_no = 112;
+
+-- 책번호가 113번인 책 삭제하기
+delete from sample_books
+where book_no = 113;
+
+-- 모든 책 정보 삭제하기
+delete from sample_books;
