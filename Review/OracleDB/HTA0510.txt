@@ -1,0 +1,79 @@
+select department_id, department_name, manager_id, first_name, last_name, 
+       city, street_address, emp_cnt
+from departments_detail_view
+where department_id = 60;
+
+-- 사원의 상세정보를 제공하는 뷰 생성하기
+-- 사원아이디, 이름, 이메일, 전화번호, 입사일, 근무개월수, 근무년수, 급여, 커미션, 급여등급,
+-- 연봉, 상사의 아이디, 상사이름, 직종아이디, 직종제목, 부서아이디, 부서명, 부서관리자이름
+create or replace view departments_detail_view
+as
+select E.employee_id as emp_id,
+	E.first_name || ', ' || E.last_name as full_name,
+	E.email, 
+	E.phone_number, 
+	E.hire_date, 
+	trunc(months_between(sysdate, E.hire_date)) work_months,
+	trunc(months_between(sysdate, E.hire_date)/12) working_year,
+	E.salary, 
+	E.commission_pct, 
+	G.grade,
+    (E.salary*12)+(E.salary*12*(nvl(E.commission_pct,0))) as annual_salary,
+    M.employee_id,
+    M.first_name || ', ' || M.last_name Manager_name,
+    J.job_id,
+    J.job_title,
+    D.department_id,
+    D.department_name,
+    DM.first_name || ', ' || DM.last_name as Dept_Manager_Name
+from employees E, salary_grade G, employees M, jobs J, departments D, employees DM
+where E.salary >= G.min_salary and E.salary <= G.max_salary 
+and E.manager_id = M.employee_id(+)
+and E.job_id = J.job_id 
+and E.department_id = D.department_id 
+and DM.employee_id(+) = D.manager_id;
+
+-- 200번 사원의 아이디, 이름, 급여, 급여등급, 연봉, 직종아이디, 소속부서명 조회
+select emp_id, full_name, salary, grade, annual_salary, job_id, department_name
+from departments_detail_view
+where emp_id = 200;
+
+-- 급여등급별 사원수를 조회하기
+select grade, count(*)
+from departments_detail_view
+group by grade;
+
+-- 입사일 기준 근무년수가 15년 이상인 사원의 아이디, 이름, 입사일, 근무년수를 조회하기
+select emp_id, full_name, hire_date, working_year
+from departments_detail_view
+where working_year >= 15
+order by working_year desc;
+
+-- 연봉이 20만불 이상인 사원의 아이디, 이름, 급여, 급여등급, 연봉, 직종을 조회하기
+select emp_id, full_name, salary, grade, annual_salary, job_id
+from departments_detail_view
+where annual_salary >= 200000
+order by annual_salary desc;
+
+-- 연봉에 대한 내림차순으로 정렬했을 때 상위 3명의 아이디, 이름, 연봉을 조회하기
+select rownum, emp_id, full_name, annual_salary
+from (select emp_id, full_name, annual_salary
+      from departments_detail_view
+      order by annual_salary desc)
+where rownum <= 3;
+
+-- 직종별 인원수를 조회했을 때, 인원수가 가장 많은 직종 3개를 조회하기
+select rownum, job_id, cnt
+from (select job_id, count(*) cnt from employees group by job_id order by cnt desc)
+where rownum <= 3;
+
+-- 직종별 인원수를 조회했을 때, 인원수를 기준으로 내림차순 정렬하고, 6번째~10번째에 해당하는
+-- 행을 조회하기
+
+select ranking, job_id, cnt
+from (select rownum ranking, job_id, cnt
+      from (select job_id, count(*) cnt
+            from employees
+            group by job_id
+            order by count(*) desc))
+where ranking >= 6 and ranking <= 10;
