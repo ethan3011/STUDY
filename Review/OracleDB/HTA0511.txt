@@ -1,0 +1,140 @@
+-- 2021 - 05 - 11 (무결성 제약조건, 분석함수) 
+
+-- 제약조건 정의하기
+-- 컬럼레벨 제약조건 정의방식 사용
+create table test_users
+(
+    user_no number(8) 
+    constraint user_no_pk not null primary key,
+    user_name varchar2(30)
+    not null,
+    user_phone varchar2(50) 
+    constraint user_phone_uk not null unique,
+    user_address varchar2(200)
+    not null,
+    user_email varchar2(100)
+    constraint user_email_unique unique not null,
+    user_status varchar2(20) default '승인대기' 
+    constraint user_status_ck check (user_status in ('승인대기','등록','삭제')),
+    user_create_date date
+    default sysdate
+);
+
+-- 생성된 테이블 삭제하기
+drop table test_users;
+
+-- 테이블 레벨 제약조건 정의방식 사용
+create table test_users
+(
+    user_no              number(8)
+    not null,
+    user_name            varchar2(30)
+    not null,
+    user_phone           varchar2(50)
+    not null unique,
+    user_address         varchar2(200)
+    not null,
+    user_email           varchar2(100)
+    not null unique,
+    user_status varchar2(20)
+    default '승인대기',
+    user_create_date date
+    default sysdate,
+
+    constraint user_no_pk primary key(user_no),
+    constraint user_status_ck check(user_status in ('승인대기','등록','삭제'))
+);
+
+-- 상품을 여러 종류 담을 수 있는 장바구니 테이블 정의하기
+create table test_cart_item
+(
+    item_no number(8) not null,
+    product_no number(8) not null,
+    user_id varchar2(50) not null,
+    product_stock number(4) default 1,
+    product_create_date date default sysdate,
+    
+    constraint cartitem_userno_pk primary key(item_no),
+    constraint cartitem_userid_fk foreign key(user_id) references sample_users(user_id),
+    constraint cartitem_productno_fk foreign key(product_no) references sample_products(product_no),
+    constraint cartitem_stock_ck check (product_stock > = 1),
+    constraint cartitem_uk unique(product_no, user_id)
+);
+
+-- 일련번호 생성하는 sequence
+create sequence cartitem_seq nocache;
+create sequence todo_seq nocache;
+
+-- test_cart_items 테이블에 장바구니 상품정보 추가하기
+insert into test_cart_item
+(item_no,product_no,user_id, product_stock, product_create_date)
+values
+(cartitem_seq.nextval,64,'hong', 2, sysdate);
+
+-- sample_products 테이블에서 64번 상품 삭제하기
+-- 이미 해당 상품번호가 부모조건으로 사용되고 있기 때문에 삭제가 불가능함
+delete from sample_products
+where product_no = 64;
+
+-- sample_cart_items의 상품수량을 변경하기
+-- check 조건식에 최소 1개 이상으로 설정되어 있으므로 0개로 변경이 불가능하다.
+update test_cart_item
+set
+    product_stock = 0;
+
+-- Top-N분석과 분석함수 사용하기
+
+-- Top-N 분석하기 : rownum을 사용한다.
+-- 월급에 대한 내림차순으로 정렬했을 때,
+-- 급여를 가장 많이 받은 사람 3명의 아이디, 이름, 급여 조회하기
+select rownum, employee_id, first_name, salary
+from (select employee_id,first_name,salary
+      from employees
+      order by salary desc)
+where rownum <= 3;
+
+-- 분석함수
+-- rank(), dense_rank(), row_number()
+-- select 분석함수() over([partition by 컬럼] [order by 컬럼]), 컬럼, 컬럼, 컬럼
+-- from 테이블명
+
+-- rank(), dense_rank(), row_number()으로 랭킹, 순번 부여하기
+-- rank()는 값이 같을 경우 공동 순위가 되어버리고 다음 번호를 건너뛰어 조회된다.
+select rank() over (order by salary desc) rank, employee_id, salary
+from employees;
+-- dense는 값이 같을 경우 공동 순위가 되지만 다음번 번호를 건너뛰지 않고 조회된다.
+select dense_rank() over (order by salary desc) dense, employee_id, salary
+from employees;
+-- row_number는 중복값과 관계없이 그냥 순서를 부여한다.
+select row_number() over (order by salary desc) row_number, employee_id, salary
+from employees;
+
+-- 각 부서에서 급여를 가장 많이 받는 사람 조회하기
+select department_id, employee_id, first_name, salary
+from    (select rank() over (partition by department_id order by salary desc) ranking,
+        employee_id, first_name, department_id, salary
+        from employees)
+where ranking = 1;
+
+-- 입사년도별 급여를 가장 많이 받는 사람 조회하기
+select employee_id,
+       first_name,
+       salary,
+       hire_year
+from (select employee_id,
+             first_name,
+             salary,
+             rank() over (partition by to_char(hire_date,'yyyy') order by salary desc) ranking,
+             to_char(hire_date,'yyyy') hire_year
+             from employees)
+where ranking = 1;
+
+
+-- row_number() 분석함수를 사용해서 순번을 부여하고, 특정 범위의 데이터를 조회하기
+-- 데이터에 대한 페이징처리시 사용되는 쿼리문
+select row_number, employee_id, first_name
+        from (select row_number() over (order by employee_id) row_number,
+        employee_id,
+        first_name
+        from employees)
+where row_number >= (page-1)*10+1 and row_number <=page*10
